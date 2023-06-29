@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour {
+    public Camera camera;
     public int speed = 10;
     Vector3 direction;
 
@@ -21,6 +22,8 @@ public class Player : MonoBehaviour {
             GetComponent<Rigidbody>().position + 
             (direction * speed * Time.deltaTime)
         );
+
+        //Ray ray = GetComponent<Camera>().ScreenPointToRay(new Vector3());
     }
 
     void move() {
