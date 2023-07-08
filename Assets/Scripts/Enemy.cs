@@ -17,18 +17,25 @@ public class Enemy : MonoBehaviour
         
     }
 
+    void attackPlayer() {
+        player.GetComponent<Player>().gameOverScreen.SetActive(true);
+        player.GetComponent<Player>().isAlive = false;
+        Time.timeScale = 0;
+    }
+
     void FixedUpdate(){
         Vector3 direction = player.transform.position - transform.position;
         float distance = Vector3.Distance(transform.position, player.transform.position);
+        Quaternion rotation = Quaternion.LookRotation(direction);
+        GetComponent<Rigidbody>().MoveRotation(rotation);
 
-        if(distance > 2) {
+        if (distance > 2) {
             GetComponent<Rigidbody>().MovePosition(
                 GetComponent<Rigidbody>().position +
                 direction.normalized * speed * Time.deltaTime
             );
-
-            Quaternion rotation = Quaternion.LookRotation(direction);
-            GetComponent<Rigidbody>().MoveRotation(rotation);
+        } else {
+            attackPlayer();
         }
     }
 }

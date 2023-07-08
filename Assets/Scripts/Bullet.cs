@@ -17,4 +17,10 @@ public class Bullet : MonoBehaviour {
             transform.forward * speed * Time.deltaTime
         );
     }
+
+    void OnTriggerEnter(Collider other) {
+        if(other.tag == "Enemy")
+            Destroy(other.gameObject);
+        Destroy(gameObject);
+    }
 }

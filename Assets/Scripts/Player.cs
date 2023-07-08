@@ -1,20 +1,31 @@
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour {
-    public Camera camera;
     public int speed = 10;
+    public LayerMask mask;
+    public GameObject gameOverScreen;
+    public bool isAlive = true;
+
     Vector3 direction;
 
     // Start is called before the first frame update
     void Start() {
-        
+        Time.timeScale = 1;
     }
 
     // Update is called once per frame
     void Update() {
         move();
+        if (!isAlive)
+        {
+            if (Input.GetButtonDown("Fire1"))
+            {
+                SceneManager.LoadScene("MainScene");
+            }
+        }
     }
 
     void FixedUpdate(){
@@ -23,7 +34,18 @@ public class Player : MonoBehaviour {
             (direction * speed * Time.deltaTime)
         );
 
-        //Ray ray = GetComponent<Camera>().ScreenPointToRay(new Vector3());
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Debug.DrawRay(ray.origin, ray.direction * 500, Color.red);
+        
+        RaycastHit hit;
+        if(Physics.Raycast(ray, out hit, 500, mask)){
+            Vector3 playerAim = hit.point - transform.position;
+            playerAim.y = transform.position.y;
+
+            Quaternion rotation = Quaternion.LookRotation(playerAim);
+            GetComponent<Rigidbody>().MoveRotation(rotation);
+        }
+
     }
 
     void move() {
